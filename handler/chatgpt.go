@@ -13,11 +13,29 @@ import (
 )
 
 func Question(c *gin.Context) {
-	qst := c.Query("qst")
+	// qst := c.Query("qst")
+
+	req := &model.GptReq{}
+
+	err := c.BindJSON(req)
+	if err != nil {
+		// TODO ADD LOG
+		c.JSON(500, gin.H{
+			"status": http.StatusInternalServerError,
+			"answer": "",
+		})
+		return
+	}
+
+	ans := "无访问权限, 请充值"
+
+	if canQustion(req.Id) {
+		ans = strings.Replace(sendQuestion(req.Qst), "\n\n", "", 1)
+	} 
 
 	c.JSON(200, gin.H{
 		"status": http.StatusOK,
-		"answer": sendQuestion(qst),
+		"answer": ans,
 	})
 }
 
@@ -73,5 +91,5 @@ func sendQuestion(qst string) string {
 		return ""
 	}
 
-	return strings.TrimSpace(ans.Choices[0].Text)
+	return ans.Choices[0].Text
 }

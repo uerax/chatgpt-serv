@@ -1,5 +1,10 @@
 package model
 
+type GptReq struct {
+	Id string `json:"id"`
+	Qst string `json:"question"`
+}
+
 type GptQuestion struct {
 	Qst string `json:"prompt"`
 	Model string `json:"model"`
