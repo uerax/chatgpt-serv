@@ -1,8 +1,12 @@
 package util
 
-import "crypto/sha1"
+import (
+	"crypto/sha1"
+	"fmt"
+)
 
 func Sha1(str string) string {
 	h := sha1.New()
-	return string(h.Sum([]byte(str)))
+	h.Write([]byte(str))
+	return fmt.Sprintf("%x", h.Sum(nil))
 }
