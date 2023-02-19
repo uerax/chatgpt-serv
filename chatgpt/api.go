@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/uerax/chatgpt-prj/model"
+	"github.com/uerax/goconf"
 )
 
 func SendQuestion(qst string) string {
@@ -14,7 +15,10 @@ func SendQuestion(qst string) string {
 		return ""
 	}
 	url := "https://api.openai.com/v1/completions"
-	openai_key := "" // CONFIG
+	openai_key, err := goconf.VarString("chatgpt", "key") // CONFIG
+	if err != nil {
+		return ""
+	}
 	mode := "text-davinci-003"
 	max_tokens := 1000
 	temperature := 0

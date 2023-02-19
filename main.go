@@ -1,22 +1,27 @@
 package main
 
 import (
-	"os"
-
 	"github.com/gin-gonic/gin"
+	"github.com/uerax/goconf"
+
 	"github.com/uerax/chatgpt-prj/handler"
-	"github.com/uerax/chatgpt-prj/wechat"
 )
 
 
 func main() {
+
+	err := goconf.LoadConfig("etc")
+	if err != nil {
+		panic("配置文件读取失败")
+	}
+
 	r := gin.Default()
 
-	err := wechat.Init()
-	if err != nil {
-		// TODO
-		os.Exit(1)
-	}
+	// err = wechat.Init()
+	// if err != nil {
+	// 	// TODO
+	// 	os.Exit(1)
+	// }
 
 	r.POST("/question", handler.Question)
 	r.GET("/wechat/", handler.WechatCheck)
