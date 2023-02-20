@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+
 	"github.com/uerax/chatgpt-prj/chatgpt"
 	"github.com/uerax/chatgpt-prj/global"
 	"github.com/uerax/chatgpt-prj/model"
@@ -26,8 +27,6 @@ func WechatCheck(c *gin.Context) {
 	} else {
 		c.String(http.StatusBadRequest, "ERROR")
 	}
-	
-
 }
 
 func WechatMessage(c *gin.Context) {

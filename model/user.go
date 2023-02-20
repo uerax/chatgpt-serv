@@ -1,10 +1,9 @@
 package model
 
-import "time"
-
 type User struct {
 	Id string `json:"id"` // id
-	Expired time.Duration `json:"expired"` // 过期时间
-	ReqCnt int `json:"request_count"` // 请求次数
-	Free bool `json:"free"` // 是否免费
+	AvailableTimes int `json:"available_times"` // 剩余请求次数
+	Expired int64 `json:"ttl"` // vip过期时间
+	Vip bool `json:"vip"` // 是否vip用户
+	RegisterTime int64 `json:"register_time"` // 注册时间
 }
