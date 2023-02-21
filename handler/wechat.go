@@ -17,7 +17,7 @@ import (
 	"github.com/uerax/chatgpt-prj/util"
 )
 
-func WechatCheck(c *gin.Context) {
+func WechatCheckHandler(c *gin.Context) {
 	signature := c.Query("signature")
 	timestamp := c.Query("timestamp")
 	nonce := c.Query("nonce")
@@ -29,7 +29,7 @@ func WechatCheck(c *gin.Context) {
 	}
 }
 
-func WechatMessage(c *gin.Context) {
+func WechatMessageHandler(c *gin.Context) {
 
 	userInfo := &model.UserInfo{}
 

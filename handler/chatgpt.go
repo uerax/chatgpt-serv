@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Question(c *gin.Context) {
+func AskHandler(c *gin.Context) {
 	// qst := c.Query("qst")
 
 	req := &model.GptReq{}

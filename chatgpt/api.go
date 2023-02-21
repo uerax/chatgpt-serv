@@ -17,7 +17,7 @@ func SendQuestion(qst string) string {
 	url := "https://api.openai.com/v1/completions"
 	openai_key, err := goconf.VarString("chatgpt", "key") // CONFIG
 	if err != nil {
-		return ""
+		panic("获取chatgpt的key失败")
 	}
 	mode := "text-davinci-003"
 	max_tokens := 1000
@@ -48,6 +48,11 @@ func SendQuestion(qst string) string {
 	if err != nil {
 		// TODO ADD LOG
 		return ""
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		// TODO ADD LOG
+		return "ChatGPT请求失败"
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)

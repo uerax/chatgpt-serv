@@ -1,2 +1,6 @@
 chatgpt:
-  key: 
+  key: ""
+filter:
+  ip:
+    rate: 1
+    size: 1
