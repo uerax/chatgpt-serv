@@ -16,10 +16,10 @@ func Init() {
 	}
 
 	logger.Init()
+	middleware.LogInit()
 
 	middleware.FilterInit()
 }
-
 
 func main() {
 	
@@ -27,19 +27,13 @@ func main() {
 
 	r := gin.New()
 
-	r.Use(middleware.ZapLogger(), middleware.ZapLoggerRec())
+	r.Use(middleware.ZapLogger(), middleware.ZapRecovery())
 
 	// r.Use(middleware.LoggerToFile())
 	r.Use(middleware.FilterHandler())
 
-	// Recovery 中间件会 recover 任何 panic。如果有 panic 的话，会写入 500。
-	r.Use(gin.Recovery())
-
-	// err = wechat.Init()
-	// if err != nil {
-	// 	// TODO
-	// 	os.Exit(1)
-	// }
+	// 获取微信公众号access
+	// wechat.Init()
 
 	r.POST("/question", handler.AskHandler)
 

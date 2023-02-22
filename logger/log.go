@@ -58,12 +58,66 @@ func GetLogger() *zap.Logger {
 	return logger
 }
 
-func Info(v interface{}) {
-	s := fmt.Sprintf("%v", v)
+func Info(v any) {
+	Infof("%v", v)
+}
+
+func Infof(format string, v ...any) {
+	s := fmt.Sprintf(format, v...)
 	logger.Info(s)
 }
 
-func Error(v interface{}) {
-	s := fmt.Sprintf("%v", v)
+
+func Error(v any) {
+	Errorf("%v", v)
+}
+
+func Errorf(format string, v ...any) {
+	s := fmt.Sprintf(format, v...)
 	logger.Error(s)
+}
+
+func Warn(v any) {
+	Warnf("%v", v)
+}
+
+func Warnf(format string, v ...any) {
+	s := fmt.Sprintf(format, v...)
+	logger.Warn(s)
+}
+
+func Debug(v any) {
+	Debugf("%v", v)
+}
+
+func Debugf(format string, v ...any) {
+	s := fmt.Sprintf(format, v...)
+	logger.Debug(s)
+}
+
+func DPanic(v any) {
+	DPanicf("%v", v)
+}
+
+func DPanicf(format string, v ...any) {
+	s := fmt.Sprintf(format, v...)
+	logger.DPanic(s)
+}
+
+func Panic(v any) {
+	Panicf("%v", v)
+}
+
+func Panicf(format string, v ...any) {
+	s := fmt.Sprintf(format, v...)
+	logger.Panic(s)
+}
+
+func Fatal(v any) {
+	Fatalf("%v", v)
+}
+
+func Fatalf(format string, v ...any) {
+	s := fmt.Sprintf(format, v...)
+	logger.Fatal(s)
 }

@@ -13,3 +13,8 @@ log:
   json: true
   # 依次对应为 debug info warn error dpanic panic fatal
   level: info
+wechat:
+  gzh:
+    secret:
+    appid:
+    token:

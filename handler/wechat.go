@@ -16,6 +16,7 @@ import (
 	"github.com/uerax/chatgpt-prj/logger"
 	"github.com/uerax/chatgpt-prj/model"
 	"github.com/uerax/chatgpt-prj/util"
+	"github.com/uerax/goconf"
 )
 
 func WechatCheckHandler(c *gin.Context) {
@@ -37,7 +38,7 @@ func WechatMessageHandler(c *gin.Context) {
 
 	err := c.BindXML(userInfo)
 	if err != nil {
-		// TODO ADD LOG
+		logger.Error(err)
 		return
 	}
 	resp := &model.UserInfo{
@@ -62,7 +63,7 @@ func WechatMessageHandler(c *gin.Context) {
 
 func checkSignature(signature, timestamp, nonce string) bool {
 	// CONFIG  url配置的token
-	token := ""
+	token := goconf.VarStringOrDefault("", "wechat", "gzh", "token")
 
 	tmpArr := sort.StringSlice{token, timestamp, nonce}
 
@@ -118,7 +119,7 @@ func sendMsg(touser, qst string) {
 
 	msgReq, err := json.Marshal(msg)
 	if err != nil {
-		// TODO ADD LOG
+		logger.Error(err)
 		return
 	}
 	

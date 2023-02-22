@@ -1,49 +1,95 @@
 package middleware
 
 import (
-	"bytes"
-	"io"
+	"errors"
+	"net"
+	"net/http"
+	"os"
+	"strings"
 	"time"
 
-	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
-	"go.opentelemetry.io/otel/trace"
+	"github.com/uerax/chatgpt-prj/logger"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-
-	"github.com/uerax/chatgpt-prj/logger"
 )
 
-func ZapLogger() gin.HandlerFunc {
-	return ginzap.GinzapWithConfig(logger.GetLogger(), &ginzap.Config{
-		UTC:        true,
-		TimeFormat: time.RFC3339,
-		Context: ginzap.Fn(func(c *gin.Context) []zapcore.Field {
-		  fields := []zapcore.Field{}
-		  // log request ID
-		  if requestID := c.Writer.Header().Get("X-Request-Id"); requestID != "" {
-			fields = append(fields, zap.String("request_id", requestID))
-		  }
-	
-		  // log trace and span ID
-		  if trace.SpanFromContext(c.Request.Context()).SpanContext().IsValid() {
-			fields = append(fields, zap.String("trace_id", trace.SpanFromContext(c.Request.Context()).SpanContext().TraceID().String()))
-			fields = append(fields, zap.String("span_id", trace.SpanFromContext(c.Request.Context()).SpanContext().SpanID().String()))
-		  }
-	
-		  // log request body
-		  var body []byte
-		  var buf bytes.Buffer
-		  tee := io.TeeReader(c.Request.Body, &buf)
-		  body, _ = io.ReadAll(tee)
-		  c.Request.Body = io.NopCloser(&buf)
-		  fields = append(fields, zap.String("body", string(body)))
-	
-		  return fields
-		}),
-	  })
+func LogInit() {
+	log = logger.GetLogger()
 }
 
-func ZapLoggerRec() gin.HandlerFunc {
-	return ginzap.RecoveryWithZap(logger.GetLogger(), true)
+var log *zap.Logger
+
+func ZapLogger() gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+		// Start timer
+		start := time.Now()
+		path := c.Request.URL.Path
+		raw := c.Request.URL.RawQuery
+
+		// Process request
+		c.Next()
+
+		end := time.Now()
+
+		fields := []zapcore.Field{
+			zap.Int("code", c.Writer.Status()),
+			zap.String("method", c.Request.Method),
+			zap.Duration("latency", end.Sub(start)),
+			zap.String("path", path),
+			zap.String("param", raw),
+			zap.String("ip", c.ClientIP()),
+			zap.String("user-agent", c.Request.UserAgent()),
+		}
+
+		fields = append(fields, zap.String("time", start.Format("20060102")))
+
+		if len(c.Errors) > 0 {
+			// Append error field if this is an erroneous request.
+			for _, e := range c.Errors.Errors() {
+				log.Error(e, fields...)
+			}
+		} else {
+			log.Info(path, fields...)
+		}
+		
+	}
+}
+
+func defaultHandleRecovery(c *gin.Context, err any) {
+	c.AbortWithStatus(http.StatusInternalServerError)
+}
+
+func ZapRecovery() gin.HandlerFunc {
+	
+	return func(c *gin.Context) {
+		defer func() {
+			if err := recover(); err != nil {
+				// Check for a broken connection, as it is not really a
+				// condition that warrants a panic stack trace.
+				var brokenPipe bool
+				if ne, ok := err.(*net.OpError); ok {
+					var se *os.SyscallError
+					if errors.As(ne, &se) {
+						if strings.Contains(strings.ToLower(se.Error()), "broken pipe") || strings.Contains(strings.ToLower(se.Error()), "connection reset by peer") {
+							brokenPipe = true
+						}
+					}
+				}
+				if brokenPipe {
+					log.Error(c.Request.URL.Path,
+						zap.Any("error", err),
+					)
+					// If the connection is dead, we can't write a status to it.
+					c.Error(err.(error)) // nolint: errcheck
+					c.Abort()
+	
+				} else {
+					defaultHandleRecovery(c, err)
+				}
+			}
+		}()
+		c.Next()
+	}
 }
