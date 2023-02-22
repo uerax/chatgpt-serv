@@ -13,6 +13,7 @@ import (
 
 	"github.com/uerax/chatgpt-prj/chatgpt"
 	"github.com/uerax/chatgpt-prj/global"
+	"github.com/uerax/chatgpt-prj/logger"
 	"github.com/uerax/chatgpt-prj/model"
 	"github.com/uerax/chatgpt-prj/util"
 )
@@ -31,6 +32,7 @@ func WechatCheckHandler(c *gin.Context) {
 
 func WechatMessageHandler(c *gin.Context) {
 
+	logger.Info("start we chat")
 	userInfo := &model.UserInfo{}
 
 	err := c.BindXML(userInfo)
