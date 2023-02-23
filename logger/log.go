@@ -13,7 +13,7 @@ var logger *zap.Logger
 func Init() {
 
 	format := goconf.VarStringOrDefault("2006-01-02 15:04:05", "log", "format")
-	// path := goconf.VarStringOrDefault("/etc/", "log", "path") 
+	path := goconf.VarStringOrDefault("log/", "log", "path")
 	
 	lv := goconf.VarStringOrDefault("info", "log", "level")
 	lvMap := map[string]zapcore.Level{
@@ -44,7 +44,8 @@ func Init() {
 	c.EncoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout(format)
 	c.EncoderConfig.CallerKey = "file"
 	c.EncoderConfig.TimeKey = "date"
-
+	c.OutputPaths = append(c.OutputPaths, path+"info.log")
+	c.ErrorOutputPaths = append(c.ErrorOutputPaths, path+"error.log")
 	l, err := c.Build()
 	if err != nil {
 		panic(err)

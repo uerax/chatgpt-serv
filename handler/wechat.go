@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-
 	"github.com/uerax/chatgpt-prj/chatgpt"
 	"github.com/uerax/chatgpt-prj/global"
 	"github.com/uerax/chatgpt-prj/logger"
@@ -19,7 +18,9 @@ import (
 	"github.com/uerax/goconf"
 )
 
+
 func WechatCheckHandler(c *gin.Context) {
+
 	signature := c.Query("signature")
 	timestamp := c.Query("timestamp")
 	nonce := c.Query("nonce")
@@ -32,13 +33,12 @@ func WechatCheckHandler(c *gin.Context) {
 }
 
 func WechatMessageHandler(c *gin.Context) {
-
-	logger.Info("start we chat")
+	var log = logger.GetLogger()
 	userInfo := &model.UserInfo{}
 
 	err := c.BindXML(userInfo)
 	if err != nil {
-		logger.Error(err)
+		log.Error(err.Error())
 		return
 	}
 	resp := &model.UserInfo{
@@ -102,6 +102,7 @@ func addCostmer() {
 }
 
 func sendMsg(touser, qst string) {
+	var log = logger.GetLogger()
 	token := global.Token
 	url := "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s"
 	
@@ -119,7 +120,7 @@ func sendMsg(touser, qst string) {
 
 	msgReq, err := json.Marshal(msg)
 	if err != nil {
-		logger.Error(err)
+		log.Error(err.Error())
 		return
 	}
 	

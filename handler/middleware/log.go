@@ -43,7 +43,7 @@ func ZapLogger() gin.HandlerFunc {
 			zap.String("user-agent", c.Request.UserAgent()),
 		}
 
-		fields = append(fields, zap.String("time", start.Format("20060102")))
+		fields = append(fields, zap.String("date", start.Format("2006-01-02 15:04:05")))
 
 		if len(c.Errors) > 0 {
 			// Append error field if this is an erroneous request.
