@@ -22,5 +22,5 @@
 
 go.work
 
-/log
+/log/*
 !/log/.gitkeep
