@@ -1,6 +1,7 @@
 dev: true
 chatgpt:
-  key: ""
+  key: 
+    - "1"
 filter:
   ip:
     rate: 1
@@ -8,7 +9,7 @@ filter:
 log:
   format: "2006-01-02 15:04:05"
   name: "log"
-  path: "f://develop/project/chatgpt-prj/log/"
+  path: "log/"
   # 日志是否为json格式, 不填默认为经典格式
   json: false
   # 依次对应为 debug info warn error dpanic panic fatal

@@ -21,7 +21,7 @@ func FilterInit() {
 
 func FilterHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		
+		// TODO 可以加上一个全局限流器, 限制时间内最大访问数
 		l := irl.GetLimiter(c.ClientIP())
 		if !l.Allow() {
 			c.JSON(http.StatusTooManyRequests, nil)
