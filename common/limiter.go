@@ -23,7 +23,6 @@ func NewIpRateLimiter(r int, size int) *IpRateLimiter {
 }
 
 
-
 func (t *IpRateLimiter) addIp(ip string) *rate.Limiter {
 	t.mx.Lock()
 	defer t.mx.Unlock()
@@ -47,4 +46,5 @@ func (t *IpRateLimiter) GetLimiter(ip string) *rate.Limiter {
 
 	return t.ips[ip]
 }
+
 

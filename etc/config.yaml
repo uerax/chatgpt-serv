@@ -3,8 +3,13 @@ chatgpt:
   key: ""
 filter:
   ip:
+    # 每秒允许单个IP总访问数
     rate: 1
     size: 1
+  request:
+    # 每秒允许总访问数
+    rate: 10
+    size: 10
 log:
   format: "2006-01-02 15:04:05"
   name: "log"
@@ -18,3 +23,6 @@ wechat:
     secret:
     appid:
     token:
+database:
+  mysql:
+    uri: root:root@tcp(172.20.185.92:3306)/golang?charset=utf8mb4&parseTime=True&loc=Local

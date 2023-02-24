@@ -14,6 +14,7 @@ import (
 	"github.com/uerax/chatgpt-prj/global"
 	"github.com/uerax/chatgpt-prj/logger"
 	"github.com/uerax/chatgpt-prj/model"
+	"github.com/uerax/chatgpt-prj/user"
 	"github.com/uerax/chatgpt-prj/util"
 	"github.com/uerax/goconf"
 )
@@ -33,6 +34,7 @@ func WechatCheckHandler(c *gin.Context) {
 }
 
 func WechatMessageHandler(c *gin.Context) {
+	user.PermissionCheck("")
 	var log = logger.GetLogger()
 	userInfo := &model.UserInfo{}
 
