@@ -19,22 +19,14 @@ func connect() {
 	if err != nil {
 		log.Panic(err.Error())
 	}
-	db, err = gorm.Open(mysql.Open(uri), &gorm.Config{})
+	db, err = gorm.Open(mysql.Open(uri), &gorm.Config{
+		CreateBatchSize: 1000,
+	})
 	if err != nil {
 		log.Panic(err.Error())
 	}
 }
 
-func Ping() bool {
-	d, err := db.DB()
-	if err != nil {
-		log.Error(err.Error())
-	}
-	err = d.Ping()
-	if err != nil {
-		log.Error(err.Error())
-		return false
-	}
-
-	return true
+func GetDB() *gorm.DB {
+	return db
 }
