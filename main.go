@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/uerax/goconf"
 
-	"github.com/uerax/chatgpt-prj/db"
 	"github.com/uerax/chatgpt-prj/handler"
 	"github.com/uerax/chatgpt-prj/handler/middleware"
 	"github.com/uerax/chatgpt-prj/logger"
@@ -21,7 +20,7 @@ func Init() {
 
 	middleware.FilterInit()
 
-	db.Init()
+	// db.Init()
 }
 
 func main() {
@@ -45,5 +44,5 @@ func main() {
 	r.GET("/wechat/", handler.WechatCheckHandler)
 	r.POST("/wechat/", handler.WechatMessageHandler)
 	
-	r.Run(":80") // 监听并在 0.0.0.0:80 上启动服务
+	r.Run(":8080") // 监听并在 0.0.0.0:80 上启动服务
 }
