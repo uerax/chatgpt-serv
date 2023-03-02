@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+
 	"github.com/gin-gonic/gin"
 	"github.com/uerax/goconf"
 
@@ -10,7 +12,12 @@ import (
 )
 
 func Init() {
-	err := goconf.LoadConfig("etc")
+
+	var path string
+	flag.StringVar(&path, "c", "etc", "config path")
+	flag.Parse()
+
+	err := goconf.LoadConfig(path)
 	if err != nil {
 		panic("配置文件读取失败")
 	}

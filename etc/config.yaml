@@ -1,7 +1,7 @@
 dev: true
 chatgpt:
   key: 
-    - "1"
+    - ""
 filter:
   ip:
     # 每秒允许单个IP总访问数
@@ -19,6 +19,7 @@ log:
   json: false
   # 依次对应为 debug info warn error dpanic panic fatal
   level: info
+  backup: false
 wechat:
   gzh:
     secret:

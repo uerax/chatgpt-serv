@@ -7,13 +7,13 @@ require (
 	github.com/uerax/goconf v1.0.2
 	go.uber.org/zap v1.24.0
 	golang.org/x/time v0.3.0
+	gorm.io/driver/mysql v1.4.7
 )
 
 require (
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
-	gorm.io/driver/mysql v1.4.7 // indirect
 )
 
 require (

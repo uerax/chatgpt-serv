@@ -1,35 +1,42 @@
 package model
 
 type GptReq struct {
-	Id string `json:"id"`
+	Id  string `json:"id"`
 	Qst string `json:"question"`
 }
 
 type GptQuestion struct {
-	Qst string `json:"prompt"`
-	Model string `json:"model"`
-	Temperature int `json:"temperature"`
-	MaxTokens int `json:"max_tokens"`
+	Qst   []GptMessage `json:"messages"`
+	Model string       `json:"model"`
+}
+
+type GptMessage struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
 }
 
 type GptAnswer struct {
-	ID      string   `json:"id"`     
-	Object  string   `json:"object"` 
+	ID      string   `json:"id"`
+	Object  string   `json:"object"`
 	Created int64    `json:"created"`
-	Model   string   `json:"model"`  
+	Model   string   `json:"model"`
 	Choices []Choice `json:"choices"`
-	Usage   Usage    `json:"usage"`  
+	Usage   Usage    `json:"usage"`
 }
 
 type Choice struct {
-	Text         string      `json:"text"`         
-	Index        int64       `json:"index"`        
-	Logprobs     interface{} `json:"logprobs"`     
-	FinishReason string      `json:"finish_reason"`
+	Text         Message `json:"message"`
+	Index        int64   `json:"index"`
+	FinishReason string  `json:"finish_reason"`
+}
+
+type Message struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
 }
 
 type Usage struct {
-	PromptTokens     int64 `json:"prompt_tokens"`    
+	PromptTokens     int64 `json:"prompt_tokens"`
 	CompletionTokens int64 `json:"completion_tokens"`
-	TotalTokens      int64 `json:"total_tokens"`     
+	TotalTokens      int64 `json:"total_tokens"`
 }

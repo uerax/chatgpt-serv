@@ -42,21 +42,25 @@ func SendQuestion(qst string) string {
 	if len(qst) == 0 {
 		return ""
 	}
-	url := "https://api.openai.com/v1/completions"
+	url := "https://api.openai.com/v1/chat/completions"
 	openai_key, err := goconf.VarArray("chatgpt", "key") // CONFIG
 	if err != nil {
 		log.Panic("获取chatgpt的key失败")
 	}
 
-	mode := "text-davinci-003"
-	max_tokens := 1000
-	temperature := 0
+	mode := "gpt-3.5-turbo"
+
 	client := &http.Client{}
+	reqMsgs := make([]model.GptMessage, 0)
+	reqMsg := model.GptMessage{
+		Role: "user",
+		Content: qst,
+	}
+	reqMsgs = append(reqMsgs, reqMsg)
+
 	reqBody := &model.GptQuestion{
-		MaxTokens:   max_tokens,
 		Model:       mode,
-		Qst:         qst,
-		Temperature: temperature,
+		Qst:	    reqMsgs,
 	}
 
 	b, err := json.Marshal(reqBody)
@@ -100,5 +104,5 @@ func SendQuestion(qst string) string {
 		return ""
 	}
 
-	return ans.Choices[0].Text
+	return ans.Choices[0].Text.Content
 }
