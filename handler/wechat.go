@@ -12,11 +12,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/uerax/chatgpt-prj/chatgpt"
 	"github.com/uerax/chatgpt-prj/global"
+	"github.com/uerax/chatgpt-prj/logger"
 	"github.com/uerax/chatgpt-prj/model"
+	"github.com/uerax/chatgpt-prj/user"
 	"github.com/uerax/chatgpt-prj/util"
+	"github.com/uerax/goconf"
 )
 
-func WechatCheck(c *gin.Context) {
+
+func WechatCheckHandler(c *gin.Context) {
+
 	signature := c.Query("signature")
 	timestamp := c.Query("timestamp")
 	nonce := c.Query("nonce")
@@ -26,17 +31,16 @@ func WechatCheck(c *gin.Context) {
 	} else {
 		c.String(http.StatusBadRequest, "ERROR")
 	}
-	
-
 }
 
-func WechatMessage(c *gin.Context) {
-
+func WechatMessageHandler(c *gin.Context) {
+	user.PermissionCheck("")
+	var log = logger.GetLogger()
 	userInfo := &model.UserInfo{}
 
 	err := c.BindXML(userInfo)
 	if err != nil {
-		// TODO ADD LOG
+		log.Error(err.Error())
 		return
 	}
 	resp := &model.UserInfo{
@@ -61,7 +65,7 @@ func WechatMessage(c *gin.Context) {
 
 func checkSignature(signature, timestamp, nonce string) bool {
 	// CONFIG  url配置的token
-	token := ""
+	token := goconf.VarStringOrDefault("", "wechat", "gzh", "token")
 
 	tmpArr := sort.StringSlice{token, timestamp, nonce}
 
@@ -100,6 +104,7 @@ func addCostmer() {
 }
 
 func sendMsg(touser, qst string) {
+	var log = logger.GetLogger()
 	token := global.Token
 	url := "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s"
 	
@@ -117,7 +122,7 @@ func sendMsg(touser, qst string) {
 
 	msgReq, err := json.Marshal(msg)
 	if err != nil {
-		// TODO ADD LOG
+		log.Error(err.Error())
 		return
 	}
 	

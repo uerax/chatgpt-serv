@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Question(c *gin.Context) {
+func AskHandler(c *gin.Context) {
 	// qst := c.Query("qst")
 
 	req := &model.GptReq{}
@@ -25,13 +25,12 @@ func Question(c *gin.Context) {
 		return
 	}
 
-	ans := "无访问权限, 请充值"
+	//ans := "无访问权限, 请充值"
 
-	if canQustion(req.Id) {
-		ans = strings.Replace(chatgpt.SendQuestion(req.Qst), "\n\n", "", 1)
-		
-	} 
-
+	// if canQustion(req.Id) {
+	// 	ans = strings.Replace(chatgpt.SendQuestion(req.Qst), "\n\n", "", 1)
+	// }
+	ans := strings.Replace(chatgpt.SendQuestion(req.Qst), "\n\n", "", 1)
 	c.JSON(200, gin.H{
 		"status": http.StatusOK,
 		"answer": ans,
